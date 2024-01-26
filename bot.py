@@ -14,7 +14,7 @@ class Bot(Client):
 
     def __init__(self):
         super().__init__(
-            name="renamer",
+            "renamer",
             api_id=API_ID,
             api_hash=API_HASH,
             bot_token=BOT_TOKEN,
@@ -37,16 +37,14 @@ class Bot(Client):
                 logging.warning(e)
                 logging.warning("Make Sure Bot admin in force sub channel")             
                 self.force_channel = None
-
         app = web.Application()
-        app.router.add_routes(web_server())  # Use add_routes instead of setup
+        app.add_routes([web.get('/', web_server)])
         runner = web.AppRunner(app)
         await runner.setup()
-
-        bind_address = "0.0.0.0"
-        await web.TCPSite(runner, bind_address, PORT).start()
+        site = web.TCPSite(runner, '0.0.0.0', PORT)
+        await site.start()
         logging.info(f"{me.first_name} ✅✅ BOT started successfully ✅✅")
-
+        
     async def stop(self, *args):
         await super().stop()      
         logging.info("Bot Stopped 🙄")
